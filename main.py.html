@@ -1,0 +1,58 @@
+<html>
+<head>
+<title>main.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #6aab73;}
+.s4 { color: #2aacb8;}
+.s5 { color: #7a7e85;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+main.py</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">pandas </span><span class="s0">as </span><span class="s1">pd</span>
+<span class="s0">from </span><span class="s1">twilio</span><span class="s2">.</span><span class="s1">rest </span><span class="s0">import </span><span class="s1">Client</span>
+
+<span class="s1">account_sid </span><span class="s2">= </span><span class="s3">'AC7420e2c3d4919d78fb179eb55188959c'</span>
+<span class="s1">auth_token </span><span class="s2">= </span><span class="s3">'208ec5847825fd017acb269aad4a9d37'</span>
+<span class="s1">from_number </span><span class="s2">= </span><span class="s3">'+1 315 371 3066'</span>
+<span class="s1">to_number </span><span class="s2">= </span><span class="s3">'+5521994890321'</span>
+
+<span class="s1">client </span><span class="s2">= </span><span class="s1">Client</span><span class="s2">(</span><span class="s1">account_sid</span><span class="s2">, </span><span class="s1">auth_token</span><span class="s2">)</span>
+
+<span class="s1">lista_meses </span><span class="s2">= [</span><span class="s3">'janeiro'</span><span class="s2">, </span><span class="s3">'fevereiro'</span><span class="s2">, </span><span class="s3">'março'</span><span class="s2">, </span><span class="s3">'abril'</span><span class="s2">, </span><span class="s3">'maio'</span><span class="s2">, </span><span class="s3">'junho'</span><span class="s2">]</span>
+
+<span class="s0">for </span><span class="s1">mes </span><span class="s0">in </span><span class="s1">lista_meses</span><span class="s2">:</span>
+    <span class="s1">tabelas_vendas </span><span class="s2">= </span><span class="s1">pd</span><span class="s2">.</span><span class="s1">read_excel</span><span class="s2">(</span><span class="s3">f'</span><span class="s0">{</span><span class="s1">mes</span><span class="s0">}</span><span class="s3">.xlsx'</span><span class="s2">)</span>
+
+    <span class="s0">if </span><span class="s2">(</span><span class="s1">tabelas_vendas</span><span class="s2">[</span><span class="s3">'Vendas'</span><span class="s2">] &gt; </span><span class="s4">55000</span><span class="s2">).</span><span class="s1">any</span><span class="s2">():</span>
+        <span class="s1">vendendor </span><span class="s2">= </span><span class="s1">tabelas_vendas</span><span class="s2">.</span><span class="s1">loc</span><span class="s2">[</span><span class="s1">tabelas_vendas</span><span class="s2">[</span><span class="s3">'Vendas'</span><span class="s2">] &gt; </span><span class="s4">55000</span><span class="s2">, </span><span class="s3">'Vendedor'</span><span class="s2">].</span><span class="s1">values</span><span class="s2">[</span><span class="s4">0</span><span class="s2">]</span>
+        <span class="s1">vendas </span><span class="s2">= </span><span class="s1">tabelas_vendas</span><span class="s2">.</span><span class="s1">loc</span><span class="s2">[</span><span class="s1">tabelas_vendas</span><span class="s2">[</span><span class="s3">'Vendas'</span><span class="s2">] &gt; </span><span class="s4">55000</span><span class="s2">, </span><span class="s3">'Vendas'</span><span class="s2">].</span><span class="s1">values</span><span class="s2">[</span><span class="s4">0</span><span class="s2">]</span>
+
+        <span class="s1">print</span><span class="s2">(</span><span class="s3">f'Seu funcionário: </span><span class="s0">{</span><span class="s1">vendendor</span><span class="s0">} </span><span class="s3">conseguiu vender: </span><span class="s0">{</span><span class="s1">vendas</span><span class="s0">} </span><span class="s3">no mês de </span><span class="s0">{</span><span class="s1">mes</span><span class="s0">}</span><span class="s3">'</span><span class="s2">)</span>
+
+        <span class="s5"># Crie o cliente Twilio</span>
+        <span class="s1">client </span><span class="s2">= </span><span class="s1">Client</span><span class="s2">(</span><span class="s1">account_sid</span><span class="s2">, </span><span class="s1">auth_token</span><span class="s2">)</span>
+
+        <span class="s5"># Mensagem a ser enviada</span>
+        <span class="s1">mensagem </span><span class="s2">= </span><span class="s3">f'Seu funcionário: </span><span class="s0">{</span><span class="s1">vendendor</span><span class="s0">} </span><span class="s3">conseguiu vender: </span><span class="s0">{</span><span class="s1">vendas</span><span class="s0">} </span><span class="s3">no mês de </span><span class="s0">{</span><span class="s1">mes</span><span class="s0">}</span><span class="s3">'</span>
+
+        <span class="s5"># Correção: Adicionei um parêntese no final do método client.messages.create() e removi o espaço após a vírgula</span>
+        <span class="s1">message </span><span class="s2">= </span><span class="s1">client</span><span class="s2">.</span><span class="s1">messages</span><span class="s2">.</span><span class="s1">create</span><span class="s2">(</span>
+            <span class="s1">body</span><span class="s2">=</span><span class="s3">f'Seu funcionário: </span><span class="s0">{</span><span class="s1">vendendor</span><span class="s0">} </span><span class="s3">conseguiu vender: </span><span class="s0">{</span><span class="s1">vendas</span><span class="s0">} </span><span class="s3">no mês de </span><span class="s0">{</span><span class="s1">mes</span><span class="s0">}</span><span class="s3">'</span><span class="s2">,</span>
+            <span class="s1">from_</span><span class="s2">=</span><span class="s3">&quot;+13153713066&quot;</span><span class="s2">,</span>
+            <span class="s1">to</span><span class="s2">=</span><span class="s3">'+5521994890321'</span>
+        <span class="s2">)</span>
+
+        <span class="s1">print</span><span class="s2">(</span><span class="s1">message</span><span class="s2">.</span><span class="s1">sid</span><span class="s2">)</span>
+
+</pre>
+</body>
+</html>
